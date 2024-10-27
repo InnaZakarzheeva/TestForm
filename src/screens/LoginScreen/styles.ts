@@ -26,6 +26,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   eclipseCenter: {
     borderColor: 'rgba(15, 15, 16, 0.2)',
@@ -74,7 +76,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: 'rgba(255, 255, 255, 0.95)',
-  }
+  },
+  imageFrame: {
+    zIndex: 2,
+  },
+  imageIcon: {
+    zIndex: 1,
+    position: 'absolute',
+    width: 58,
+    height: 58,
+  },
+  imageSmallIcon: {
+    zIndex: 1,
+    position: 'absolute',
+    width: 32,
+    height: 32,
+  },
 });
 
 export default styles;
