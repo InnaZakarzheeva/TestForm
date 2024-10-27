@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "./styles";
+import styles, { inputStyles } from "./styles";
 import LinearGradientComponent from "../../components/LinearGradient";
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import { validateEmail, validateName } from "../../services/helpers";
 
 const LoginScreen = () => {
   const scale = useSharedValue(1);
@@ -14,6 +15,8 @@ const LoginScreen = () => {
 
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
+  const [isValidEmail, setIsValidEmail] = useState<boolean>(true);
+  const [isValidName, setIsValidName] = useState<boolean>(true);
 
   useEffect(() => {
     scale.value = withRepeat(withTiming(scale.value * 0.5, { duration: 700 }), -1, true);
@@ -90,6 +93,16 @@ const LoginScreen = () => {
     ],
   }));
 
+  const onChangeEmail = (value: string) => {
+    setEmail(value);
+    setIsValidEmail(validateEmail(value));
+  };
+
+  const onChangeName = (value: string) => {
+    setName(value);
+    setIsValidName(validateName(value));
+  };
+
   const onApply = () => { };
 
   return (
@@ -133,20 +146,21 @@ const LoginScreen = () => {
 
       <TextInput
         value={email}
-        onChangeText={setEmail}
+        onChangeText={onChangeEmail}
         placeholder="Email"
         keyboardType="email-address"
         returnKeyType="next"
-        style={styles.input}
+        style={inputStyles(isValidEmail).input}
       />
+      {!isValidEmail && <Text style={styles.errorText}>Email is incorrect!</Text>}
       <TextInput
         value={name}
-        onChangeText={setName}
+        onChangeText={onChangeName}
         placeholder="Name"
         returnKeyType="done"
-        style={styles.input}
+        style={inputStyles(isValidName).input}
       />
-
+      {!isValidName && <Text style={styles.errorText}>Name is invalid!</Text>}
       <Pressable onPress={onApply} style={styles.button}>
         <LinearGradientComponent fromColor="#0098EA" toColor="#002584" style={styles.gradient}>
           <Text style={styles.btnText}>Apply</Text>

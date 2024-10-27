@@ -49,24 +49,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 26,
   },
-  input: {
-    height: 46,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    marginBottom: 16,
-    borderColor: 'rgba(15, 15, 16, 0.05)',
-    borderWidth: 1,
-    fontSize: 16,
-    fontWeight: '400',
-  },
   button: {
     height: 46,
     width: 97,
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 24,
+    marginTop: 5,
   },
   gradient: {
     borderRadius: 12,
@@ -92,6 +81,28 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
   },
+  errorText: {
+    color: 'red',
+    fontSize: 10,
+    fontWeight: '300',
+    paddingLeft: 16,
+    lineHeight: 16,
+  },
 });
+
+export const inputStyles = (isValidInput: boolean) => StyleSheet.create({
+  input: {
+    height: 46,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    marginBottom: isValidInput ? 16 : 0,
+    borderColor: isValidInput ? 'rgba(15, 15, 16, 0.05)' : 'red',
+    borderWidth: 1,
+    fontSize: 16,
+    fontWeight: '400',
+  },
+}); 
 
 export default styles;
