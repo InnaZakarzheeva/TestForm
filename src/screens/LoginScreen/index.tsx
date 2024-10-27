@@ -5,8 +5,12 @@ import styles, { inputStyles } from "./styles";
 import LinearGradientComponent from "../../components/LinearGradient";
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { validateEmail, validateName } from "../../services/helpers";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../../navigation/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const LoginScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const scale = useSharedValue(1);
   const innerCircular = useSharedValue(0);
   const centerCircular = useSharedValue(0);
@@ -103,7 +107,9 @@ const LoginScreen = () => {
     setIsValidName(validateName(value));
   };
 
-  const onApply = () => { };
+  const onApply = () => {
+    navigation.navigate('Home');
+  };
 
   return (
     <SafeAreaView style={styles.root}>
