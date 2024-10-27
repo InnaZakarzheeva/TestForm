@@ -161,8 +161,11 @@ const LoginScreen = () => {
         style={inputStyles(isValidName).input}
       />
       {!isValidName && <Text style={styles.errorText}>Name is invalid!</Text>}
-      <Pressable onPress={onApply} style={styles.button}>
-        <LinearGradientComponent fromColor="#0098EA" toColor="#002584" style={styles.gradient}>
+      <Pressable onPress={onApply} style={styles.button} disabled={!(isValidEmail && isValidName)}>
+        <LinearGradientComponent
+          fromColor="#0098EA"
+          toColor="#002584"
+          style={[styles.gradient, !(isValidEmail && isValidName) && { opacity: 0.3 }]}>
           <Text style={styles.btnText}>Apply</Text>
         </LinearGradientComponent>
       </Pressable>
