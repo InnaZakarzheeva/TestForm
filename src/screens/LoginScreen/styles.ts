@@ -88,6 +88,13 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     lineHeight: 16,
   },
+  loader: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+  },
 });
 
 export const inputStyles = (isValidInput: boolean) => StyleSheet.create({

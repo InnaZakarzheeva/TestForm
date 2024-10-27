@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles, { inputStyles } from "./styles";
 import LinearGradientComponent from "../../components/LinearGradient";
@@ -8,9 +8,16 @@ import { validateEmail, validateName } from "../../services/helpers";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../navigation/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { userLogin } from "../../store/reducers/appReducer";
+import { useDispatch } from "react-redux";
+import { useTypedSelector } from "../../services/hooks";
 
 const LoginScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
+
+  const isLoading = useTypedSelector(state => state.isLoading);
+
   const scale = useSharedValue(1);
   const innerCircular = useSharedValue(0);
   const centerCircular = useSharedValue(0);
@@ -21,6 +28,11 @@ const LoginScreen = () => {
   const [name, setName] = useState<string>('');
   const [isValidEmail, setIsValidEmail] = useState<boolean>(true);
   const [isValidName, setIsValidName] = useState<boolean>(true);
+
+  const isActiveBtn = useMemo(() =>
+    isValidEmail && isValidName && email.length > 0 && name.length > 0,
+    [email, name, isValidEmail, isValidName]
+  );
 
   useEffect(() => {
     scale.value = withRepeat(withTiming(scale.value * 0.5, { duration: 700 }), -1, true);
@@ -107,8 +119,13 @@ const LoginScreen = () => {
     setIsValidName(validateName(value));
   };
 
-  const onApply = () => {
-    navigation.navigate('Home');
+  const onApply = async () => {
+    try {
+      await dispatch(userLogin({ email, name })).unwrap();
+      navigation.navigate('Home');
+    } catch (error) {
+      Alert.alert('Error', error?.message || 'Unknown Error');
+    }
   };
 
   return (
@@ -156,6 +173,7 @@ const LoginScreen = () => {
         placeholder="Email"
         keyboardType="email-address"
         returnKeyType="next"
+        autoCapitalize="none"
         style={inputStyles(isValidEmail).input}
       />
       {!isValidEmail && <Text style={styles.errorText}>Email is incorrect!</Text>}
@@ -167,14 +185,16 @@ const LoginScreen = () => {
         style={inputStyles(isValidName).input}
       />
       {!isValidName && <Text style={styles.errorText}>Name is invalid!</Text>}
-      <Pressable onPress={onApply} style={styles.button} disabled={!(isValidEmail && isValidName)}>
+      <Pressable onPress={onApply} style={styles.button} disabled={!isActiveBtn}>
         <LinearGradientComponent
           fromColor="#0098EA"
           toColor="#002584"
-          style={[styles.gradient, !(isValidEmail && isValidName) && { opacity: 0.3 }]}>
+          style={[styles.gradient, !isActiveBtn && { opacity: 0.3 }]}>
           <Text style={styles.btnText}>Apply</Text>
         </LinearGradientComponent>
       </Pressable>
+
+      {isLoading && <ActivityIndicator size="large" color={"#002584"} style={styles.loader} />}
     </SafeAreaView>
   );
 };
